@@ -6,9 +6,9 @@ console.log("Begin Script")
 
 let sourceUrl = `https://abc-sonogram-api.azurewebsites.net/sonograms`
 let destUrl = `https://studio.twilio.com/v2/Flows/FW78dff28617dc6cc617b3fee12bc4f55f/Executions`
-let twillioFlowId = Environment.GetEnvironmentVariable('twillioFlowId')
-let twilioAccountSid = Environment.GetEnvironmentVariable("twilioAccountSid")
-let twilioAuthToken = Environment.GetEnvironmentVariable("twilioAuthToken")
+let twillioFlowId = process.env["twillioFlowId"]
+let twilioAccountSid = process.env["twilioAccountSid"]
+let twilioAuthToken = process.env["twilioAuthToken"]
 
 let process = async function (context, myTimer) {
     const client = twillio(twilioAccountSid, twilioAuthToken);
