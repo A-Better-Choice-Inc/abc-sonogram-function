@@ -10,7 +10,7 @@ let twillioFlowId = process.env["twillioFlowId"]
 let twilioAccountSid = process.env["twilioAccountSid"]
 let twilioAuthToken = process.env["twilioAuthToken"]
 
-let process = async function (context, myTimer) {
+module.exports = async function (context, myTimer) {
     const client = twillio(twilioAccountSid, twilioAuthToken);
     console.log("Fetch Data From Source URL")
     
@@ -53,5 +53,3 @@ let process = async function (context, myTimer) {
             .then(execution => console.log(execution.sid));
     })
 };
-
-module.exports = process;
