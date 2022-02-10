@@ -8,6 +8,7 @@
   "author": "",
   "dependencies": {
     "axios": "^0.25.0",
-    "luxon": "^2.3.0"
+    "luxon": "^2.3.0",
+    "twilio": "^3.74.0"
   }
 }
