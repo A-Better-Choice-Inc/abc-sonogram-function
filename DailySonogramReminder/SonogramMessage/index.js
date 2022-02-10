@@ -1,52 +1,57 @@
 const axios = require('axios');
-module.exports = async function (context, myTimer) {
-    // const {getdata} = await axios.get(`https://abc-sonogram-api.azurewebsites.net/sonograms`)
-    // const {getdata} = await axios.get(`https://api.tfl.gov.uk/Line/central%2cjubilee%2clondon-overground/Status?detail=true`);  
+const twillio = require('twilio');
+const { DateTime } = require("luxon");
 
-    // const response = await axios.get(`https://abc-sonogram-api.azurewebsites.net/sonograms`);
-    const response = await axios.get(`http://localhost:3000/sonograms`);
-    console.log(response.data);
+console.log("Begin Script")
 
-    // const msg = [];
-    response.forEach(line => {
-    //     // Loop through each Train line Status
-        // line.lineStatuses.forEach(status =>{
-    //         // Create Message describing each Line Status
-            msg.push(`The ${line.id} Line has a `);
+let sourceUrl = `https://abc-sonogram-api.azurewebsites.net/sonograms`
+let destUrl = `https://studio.twilio.com/v2/Flows/FW78dff28617dc6cc617b3fee12bc4f55f/Executions`
+let twillioFlowId = Environment.GetEnvironmentVariable('twillioFlowId')
+let twilioAccountSid = Environment.GetEnvironmentVariable("twilioAccountSid")
+let twilioAuthToken = Environment.GetEnvironmentVariable("twilioAuthToken")
 
-            // var timeStamp = new Date().toISOString();
-            // context.log('JavaScript timer trigger function ran!', timeStamp);
+let process = async function (context, myTimer) {
+    const client = twillio(twilioAccountSid, twilioAuthToken);
+    console.log("Fetch Data From Source URL")
+    
+    let responseData  = await axios.get(sourceUrl)
+    // console.log("ResponseData: ", responseData)
+    
+    responseData.data.data.forEach(async line => {
+        console.log("Response Date:", line.date)
+        console.log("Response Time:", line.time)
 
-            // context.log(msg)
-    //         if (status.statusSeverityDescription !== "Good Service"){
-    //             msg.push(status.reason);
-    //         };
-        });
-    // });
+        fulldate = DateTime.fromISO(line.date).setZone("utc")
+        console.log("Luxon: ", fulldate)
+        
+        monthnumber = fulldate.toFormat('LL')
+        daynumber = fulldate.toFormat('dd')
+        dayofweek = fulldate.toFormat('cccc')
+        
+        fulltime = DateTime.fromISO(line.time).setZone("America/Chicago")
+        console.log("Luxon: ", fulltime)
+        combinedTime = fulltime.toFormat('hh:mm a')
 
-    let msg = [];
-    // getdata.forEach(id => {
-        //Loop through each Train line Status
-        // data.id.forEach(sonogram =>{
-            //Create Message describing each Line Status
-            // msg.push(`The ${getdata} Line has a .`);
-
-            // if (status.statusSeverityDescription !== "Good Service"){
-                // msg.push(status.reason);
-            // }
-        // });
-    // });
-
-    // context.log(msg.join(`\n`))
-
-    // console.log(`Got ${Object.getdata} NOTHING!`)
-
-
-    context.bindings.message = {
-        body: msg.join(`\n`),
-        to: "+13161234567"
-     };
-
-    context.done();
-
+        let twillioParams = {
+            to: line.Phone, 
+            from: '+13166855757',
+            parameters: {
+                sonogram_id: line.id,
+                textmessage: [
+                    "This is a reminder for your appointment at A BETTER CHOICE on",
+                    `${dayofweek}, ${monthnumber}/${daynumber} at ${combinedTime}. Please`,
+                    "reply Y to confirm and N to cancel. Thanks!"
+                ].join(" "),
+                client_id: line.client_id_fk,
+                type: 'sonogram',
+            }
+        }
+        console.log("Sending to Twillio: ", twillioParams)
+        await client.studio.flows(twillioFlowId)
+            .executions
+            .create(twillioParams)
+            .then(execution => console.log(execution.sid));
+    })
 };
+
+module.exports = process;
