@@ -4,8 +4,7 @@ const { DateTime } = require("luxon");
 
 console.log("Begin Script")
 
-let sourceUrl = `https://abc-sonogram-api.azurewebsites.net/sonograms`
-let destUrl = `https://studio.twilio.com/v2/Flows/FW78dff28617dc6cc617b3fee12bc4f55f/Executions`
+let sourceUrl = `https://abc-sonogram-api.azurewebsites.net/sonograms/GetTomorrowSonosOKToText`
 let twillioFlowId = process.env["twillioFlowId"]
 let twilioAccountSid = process.env["twilioAccountSid"]
 let twilioAuthToken = process.env["twilioAuthToken"]
