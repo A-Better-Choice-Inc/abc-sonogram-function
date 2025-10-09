@@ -1,14 +1,17 @@
 {
   "name": "dailysonogramreminder",
-  "version": "",
-  "description": "",
+  "version": "1.0.0",
+  "description": "Daily sonogram appointment reminders via Twilio",
   "scripts": {
     "test": "echo \"No tests yet...\""
   },
   "author": "",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "dependencies": {
-    "axios": "^0.25.0",
-    "luxon": "^2.3.0",
-    "twilio": "^3.74.0"
+    "axios": "^1.7.7",
+    "luxon": "^3.5.0",
+    "twilio": "^5.3.5"
   }
 }
