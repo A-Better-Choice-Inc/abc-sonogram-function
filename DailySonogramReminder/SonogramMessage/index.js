@@ -5,7 +5,7 @@ const { DateTime } = require("luxon");
 console.log("Begin Script")
 
 // Update to use the new PHP API endpoint
-let sourceUrl = `https://abcmc.azurewebsites.net/api/v1/sonogram_reminders.php`
+let sourceUrl = `https://abcmc.pregnancywichita.com/api/v1/sonogram_reminders.php`
 let twillioFlowId = process.env["twillioFlowId"]
 let twilioAccountSid = process.env["twilioAccountSid"]
 let twilioAuthToken = process.env["twilioAuthToken"]
